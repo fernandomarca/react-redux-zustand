@@ -2,18 +2,26 @@ import { MessageCircle } from "lucide-react";
 import { Header } from "../components/Header";
 import { Video } from "../components/Video";
 import { Module } from "../components/Module";
-import { useAppDispatch, useAppSelector } from "../store";
-import { loadCourse, useCurrentLesson } from "../store/slices/player";
+import { useCurrentLesson, useStore } from "../zustand-store";
+// import { useAppDispatch, useAppSelector } from "../store";
+// import { loadCourse, useCurrentLesson } from "../store/slices/player";
 import { useEffect } from "react";
 
 export function Player() {
-  const dispatch = useAppDispatch();
-  const modules = useAppSelector((state) => state.player.course?.modules);
+  const { course, load } = useStore((store) => {
+    return {
+      course: store.course,
+      load: store.load,
+    };
+  });
+  // const dispatch = useAppDispatch();
+  // const modules = useAppSelector((state) => state.player.course?.modules);
 
   const { currentLesson } = useCurrentLesson();
 
   useEffect(() => {
-    dispatch(loadCourse());
+    // dispatch(loadCourse());
+    load();
   }, []);
 
   useEffect(() => {
@@ -47,8 +55,8 @@ export function Player() {
           overflow-y-scroll scrollbar scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-zinc-900
           "
           >
-            {modules &&
-              modules.map((module, index) => (
+            {course?.modules &&
+              course?.modules.map((module, index) => (
                 <Module
                   key={module.id}
                   moduleIndex={index}
